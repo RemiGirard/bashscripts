@@ -1,0 +1,96 @@
+#!/bin/bash
+
+# Dernière modification : ajout de formats multiples pour images fixes
+
+echo "###################################################"
+echo "Welcome to whatchfolder"
+echo "Version 1.13"
+echo "###################################################"
+echo
+
+IFS=$\n
+
+# depot=$1
+# sourceTerminee=$2
+# erreur=$3
+# fichierEncode=$4
+# logs=$5
+
+depot=DEPOT
+sourceTerminee=DONE
+erreur=ERROR
+fichierEncode=OUT
+logs=LOGS
+
+# mkdir $depot
+# mkdir $sourceTerminee
+# mkdir $erreur
+# mkdir $fichierEncode
+# mkdir $logs
+logscript=$logs/logscriptPLAYOUT.log
+
+
+i=0
+
+function logger {
+        echo "`date +%F"_"%H:%M:%S` $1 $2" | tee -a $logscript
+#tee affiche dans le logscript et en plus dans le terminal
+}
+
+echo Dépot = $depot
+echo Sources Terminées = $sourceTerminee
+echo Erreur = $erreur
+echo Fichiers encodées = $fichierEncode
+echo 
+echo Attente d\'un nouveau fichier
+
+# Boucle
+while [ $i -le 10 ]
+do
+#       liste des fichiers
+        list=`find "$depot" -type f`
+        for fileName in $list
+                do
+                logger INFO "Fichier détecté : $fileName"
+                if [[ -f $fileName ]]
+                then
+                        size1=`ls -l $fileName | cut -d" " -f7`
+                        sleep 5
+                        size2=`ls -l $fileName | cut -d" " -f7`
+                        if [[ $size1 -eq $size2 ]]
+                        then
+                        logger INFO "Début d'encodage de $fileName"
+                        dateFile=`date +%F"_"%H-%M-%S`
+
+                                if [[ $fileName == *.jpg ]]||[[ $fileName == *.jpeg ]]||[[ $fileName == *.png ]]||[[ $fileName == *.bmp ]]||[[ $fileName == *.tif ]]
+                                then
+# Encodage d'une image fixe
+                                ffmpeg -loop 1 -i $fileName -vcodec prores -profile:v 2 -t 10 -s hd1080 -r 25 -b:v 5000k \
+                                -y ${fileName/$depot/$fichierEncode}"_"$dateFile.mov &> ${fileName/$depot/$logs}"_"$dateFile.log
+                                cdeError=$?
+                                else
+# Encodage d'une vidéo
+                                ffmpeg -i $fileName -vcodec mpeg4 -b:v 10000k -s pal -r 25 -deinterlace \
+                                -acodec pcm_s16be -ar 48000 -ac 2 \
+                                -f mov -y ${fileName/$depot/$fichierEncode}"_"$dateFile.mp4 &> ${fileName/$depot/$logs}"_"$dateFile.log
+                                cdeError=$?
+                                fi
+
+                                if [[ $cdeError -eq 0 ]]
+                                then
+                                        logger INFO "Fin d'encodage de $depot/$fileName"
+                                        echo $fileName
+                                        echo ${fileName/$depot/$fichierEncode}"_"$dateFile.mov
+                                        mv $fileName ${fileName/$depot/$sourceTerminee}"_"$dateFile"_"$dateFile
+                                else
+                                        logger ERROR "Echec de l'encodage de $depot/$fileName"
+                                        logger ERROR ffmpeg LOG: `tail ${fileName/$depot/$logs}"_"$dateFile.log`
+                                        mv $fileName ${fileName/$depot/$erreur}"_"$dateFile
+                                        logger INFO "Fichier déplacé dans ${fileName/$depot/$erreur}"_"$dateFile"
+                                fi
+                        fi
+                fi
+        logger INFO "Attente d'un nouveau fichier"
+        done
+        sleep 5
+done
