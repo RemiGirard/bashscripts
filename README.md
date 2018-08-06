@@ -1,7 +1,13 @@
 # bashscript
 
+## rsyncWithVerification
+transfer data with rsync and verify files transferred with checksum
+
+## whatchfolderffmpeg
+Video compression watchfoder. Compress the content of a folder.
+
 ## testreadfiles
-Bash script to test read performance
+Bash script to test read performance.
 
 ## AutoBackupNewDrives
 Bash script to transfer and verify new volumes mounted
@@ -20,8 +26,3 @@ LAUNCH with AppleScript:
 - double click on the AutoBackupNewDrives.app
 - enter your destination folders
 - click launch
-
-## rsyncWithVerification
-transfer data with rsync and verify files transferred with checksum
-
-## whatchfolderffmpeg
