@@ -26,3 +26,6 @@ LAUNCH with AppleScript:
 - double click on the AutoBackupNewDrives.app
 - enter your destination folders
 - click launch
+
+## upgradeUbuntu
+Short script to update Ubuntu and remove amazon files
