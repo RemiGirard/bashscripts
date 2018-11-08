@@ -1,0 +1,1 @@
+listOfUsers=`dscl . list /users`;for i in $listOfUsers; do sysadminctl -secureTokenStatus $i; done;
