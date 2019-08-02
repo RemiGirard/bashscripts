@@ -1,4 +1,4 @@
-# bashscript
+# bashscripts
 
 ## rsyncWithVerification
 transfer data with rsync and verify files transferred with checksum
