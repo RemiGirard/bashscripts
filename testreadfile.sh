@@ -55,16 +55,16 @@ echo ""
 echo "--------------"
 echo "--- RESULT ---"
 echo "--------------"
-echo "Date de debut" $datestart
-echo "Date de fin" $dateend
-echo "Secondes Ecoulées" $ELAPSED_TIME
+echo "Start date " $datestart
+echo "End data " $dateend
+echo "Seconds elapsed" $ELAPSED_TIME
 minuteelapsed=$(($ELAPSED_TIME/60))
 minuteelapsedfois60=$((60*$minuteelapsed))
 secondeminuteelapsed=$(($ELAPSED_TIME-$minuteelapsedfois60))
-echo "Minutes écoulées" $minuteelapsed "+" $secondeminuteelapsed "secondes"
+echo "Minutes elapsed" $minuteelapsed "+" $secondeminuteelapsed "seconds"
 
 debit=$(($TOTALSIZE/$ELAPSED_TIME))
-echo "debit en B/s" $debit
+echo "bitrate B/s " $debit
 debitm=$(($debit/1000000))
-echo "debit en MB/s" $debitm
-echo "Taille totale" $TOTALSIZE
+echo "bitrate MB/s" $debitm
+echo "Total size" $TOTALSIZE
